@@ -72,7 +72,7 @@ public class GestorFonda {
         }
     }
 
-    public static void guardarConsumidos() {
+    public static boolean guardarConsumidos() {
         try {
             FileWriter fw = new FileWriter("Consumido.txt");
             BufferedWriter escritor = new BufferedWriter(fw);
@@ -85,8 +85,10 @@ public class GestorFonda {
                 escritor.newLine();
             }
             escritor.close();
+            return true
         } catch (IOException e) {
             System.out.println(">> Error al guardar en Consumido.txt");
+            return false
         }
     }
 
@@ -154,6 +156,7 @@ public class GestorFonda {
     }
 
     public static void agregarRegistro(Scanner scanner) {
+        boolean check;
         if (totalRegistros() >= 200) {
             System.out.println();
             System.out.println(">> Error: se alcanzo la capacidad maxima de registros (200).");
@@ -258,10 +261,13 @@ public class GestorFonda {
 
             choripanes[cantChoripanes] = new Choripan(consumidor, largo, ancho, fecha);
             cantChoripanes++;
-            guardarConsumidos();
-            System.out.println();
-            System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
-
+            //condiciona el siguiente mensaje en caso de que no se haya podido agregar correctamente en Consumido.txt
+            check = guardarConsumidos();
+            if (check){
+                System.out.println();
+                System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
+            }
+            
         } else {
             System.out.print("Litros del terremoto: ");
             String litrosStr = scanner.nextLine();
@@ -294,13 +300,18 @@ public class GestorFonda {
 
             terremotos[cantTerremotos] = new Terremoto(consumidor, litros, fecha);
             cantTerremotos++;
-            guardarConsumidos();
-            System.out.println();
-            System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
+            //lo mismo que la modificacion anterior (de mas arriba)
+            check = guardarConsumidos();
+            if (check){
+                System.out.println();
+                System.out.println(">> Registro agregado correctamente y guardado en Consumido.txt");
+            }
+            
         }
     }
 
     public static void editarRegistro(Scanner scanner) {
+        boolean check;
         System.out.println();
         System.out.println("Tipo de registro a editar:");
         System.out.println("  [1] Choripan");
@@ -372,8 +383,10 @@ public class GestorFonda {
                 }
             }
 
-            guardarConsumidos();
-            System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+            check = guardarConsumidos();
+            if (check){
+                System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+            }
 
         } else {
             if (op.equals("2")) {
@@ -428,13 +441,17 @@ public class GestorFonda {
                     }
                 }
 
-                guardarConsumidos();
-                System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+                check = guardarConsumidos();
+                if(check){
+                    System.out.println(">> Registro actualizado correctamente y guardado en Consumido.txt");
+                }
+                
             }
         }
     }
 
     public static void eliminarRegistro(Scanner scanner) {
+        boolean check;
         System.out.println();
         System.out.println("Tipo de registro a eliminar:");
         System.out.println("  [1] Choripan");
@@ -483,8 +500,11 @@ public class GestorFonda {
                 }
                 choripanes[cantChoripanes - 1] = null;
                 cantChoripanes--;
-                guardarConsumidos();
-                System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+                check = guardarConsumidos();
+                if (check){
+                    System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+                }
+                
             }
         } else {
             if (op.equals("2")) {
@@ -522,8 +542,11 @@ public class GestorFonda {
                     }
                     terremotos[cantTerremotos - 1] = null;
                     cantTerremotos--;
-                    guardarConsumidos();
-                    System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+                    check = guardarConsumidos();
+                    if (check){
+                        System.out.println(">> Registro eliminado correctamente. Cambios guardados en Consumido.txt");
+                    }
+                    
                 }
             }
         }
